@@ -29,6 +29,7 @@ class ResumeMakerInterface
   def initialize
 
     @resume_makers = []
+    @user_data = {}
 
     # TODO: Search for plugins and add them
   end
@@ -45,12 +46,13 @@ class ResumeMakerInterface
       else puts "\nInvalid option"
       end
 
-      print "Would you like to continue(y/n) : "
-      break if gets == "n\n"
+      #print "Would you like to continue(y/n) : "
+      #break if gets == "n\n"
     end
   end
 
   def displayMenu
+    system 'clear'
     puts "\nChoose an option"
     print "
         1. Enter data
@@ -63,6 +65,16 @@ class ResumeMakerInterface
   end
 
   def getData
+    system 'clear'
+
+    print " Name : "
+    @user_data["name"] = gets
+
+    print " Age : "
+    @user_data["age"] = Integer(gets)
+
+    print " Place : "
+    @user_data["place"] = gets
   end
 
   def chooseFormat
