@@ -1,4 +1,4 @@
-
+require_relative 'ResumeMaker'
 
 =begin
 Exercise: [Develop the application using TDD and OO principles.]
@@ -28,8 +28,9 @@ step 5 : Add functionality to ResumeMakerInterface class , inorder to search the
 class ResumeMakerInterface
   def initialize
 
-    @resume_makers = []
+    @resume_makers = [ResumeMaker]
     @user_data = {}
+    @chosen_resume_maker = @resume_makers[0] # Initially , chosen output maker is defaulted to ResumeMaker(plaintext)
 
     # TODO: Search for plugins and add them
   end
@@ -60,6 +61,8 @@ class ResumeMakerInterface
         3. Export
         4. Quit
 
+        Currently chosen format : #{@chosen_resume_maker.output_format}
+
         Your option : "
     gets
   end
@@ -78,9 +81,22 @@ class ResumeMakerInterface
   end
 
   def chooseFormat
+    system 'clear'
+    @resume_makers.each_with_index do |resumeMaker, index|
+      puts "\n\t#{index + 1}. #{resumeMaker.output_format}"
+    end
+    print "\n\n\tYour choice : "
+    choice = Integer(gets)
+
+    @chooseFormat = @resume_makers[choice]
   end
 
   def saveFile
+    system 'clear'
+    print "file name : "
+    file_name = gets
+
+    @chosen_resume_maker.export(@user_data, file_name)
   end
 
 end
