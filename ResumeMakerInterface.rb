@@ -1,4 +1,4 @@
-require_relative 'ResumeMaker'
+require_relative 'format_plugins/ResumeMaker'
 
 =begin
 Exercise: [Develop the application using TDD and OO principles.]
@@ -33,6 +33,7 @@ class ResumeMakerInterface
     @chosen_resume_maker = @resume_makers[0] # Initially , chosen output maker is defaulted to ResumeMaker(plaintext)
 
     # TODO: Search for plugins and add them
+    load_format_plugins
   end
 
   def start
@@ -88,7 +89,7 @@ class ResumeMakerInterface
     print "\n\n\tYour choice : "
     choice = Integer(gets)
 
-    @chooseFormat = @resume_makers[choice]
+    @chosen_resume_maker = @resume_makers[choice - 1]
   end
 
   def saveFile
@@ -99,4 +100,24 @@ class ResumeMakerInterface
     @chosen_resume_maker.export(@user_data, file_name)
   end
 
+
+  def load_format_plugins
+
+    existing_classes = ObjectSpace.each_object(Class).to_a
+
+    files_in_plugins_folder = `ls format_plugins`.scan(/^.*\.rb$/)
+
+    files_in_plugins_folder.each do |file_name|
+      require_relative "format_plugins/#{file_name}"
+    end
+
+
+    new_classes = ObjectSpace.each_object(Class).to_a - existing_classes
+
+    new_classes.each do |loadedClass|
+      @resume_makers << loadedClass if loadedClass < ResumeMaker
+    end
+
+    #puts @resume_makers.to_s
+  end
 end
