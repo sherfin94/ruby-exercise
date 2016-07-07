@@ -32,7 +32,7 @@ class ResumeMakerInterface
     @user_data = {}
     @chosen_resume_maker = @resume_makers[0] # Initially , chosen output maker is defaulted to ResumeMaker(plaintext)
 
-    # TODO: Search for plugins and add them
+
     load_format_plugins
   end
 
@@ -95,7 +95,7 @@ class ResumeMakerInterface
   def saveFile
     system 'clear'
     print "file name : "
-    file_name = gets
+    file_name = gets.chomp
 
     @chosen_resume_maker.export(@user_data, file_name)
   end
