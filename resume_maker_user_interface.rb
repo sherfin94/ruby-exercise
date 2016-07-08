@@ -1,12 +1,14 @@
 require_relative 'format_plugins/resume_maker_template'
 require_relative 'user_data'
 require_relative 'plugin_loader'
+require_relative 'data_collector'
 
 class ResumeMakerUserInterface
   def initialize
     @resume_makers = []
     @user_data = UserData.new
     @plugin_loader = PluginLoader.new
+    @data_collector = DataCollector.new
 
     load_format_plugins
     @chosen_resume_maker = @resume_makers[0]
@@ -43,12 +45,8 @@ class ResumeMakerUserInterface
 
   def get_data
     system 'clear'
-    record = []
-    %w{Name Age Place}.each do |attribute|
-      print " #{attribute} : "
-      record << gets.chomp
-    end
-    @user_data.name, @user_data.age, @user_data.place = record
+    record = @data_collector.collect_data(%w(Name Age Place))
+    @user_data.name, @user_data.age, @user_data.place = record.values
   end
 
   def choose_format
