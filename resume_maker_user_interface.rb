@@ -43,15 +43,12 @@ class ResumeMakerUserInterface
 
   def get_data
     system 'clear'
-
-    print ' Name : '
-    @user_data.name = gets
-
-    print ' Age : '
-    @user_data.age = gets
-
-    print ' Place : '
-    @user_data.place = gets
+    record = []
+    %w{Name Age Place}.each do |attribute|
+      print " #{attribute} : "
+      record << gets.chomp
+    end
+    @user_data.name, @user_data.age, @user_data.place = record
   end
 
   def choose_format
