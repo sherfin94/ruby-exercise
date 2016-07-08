@@ -6,7 +6,6 @@ require_relative 'data_collector'
 class ResumeMakerUserInterface
   def initialize
     @resume_makers = []
-    @user_data = UserData.new
     @plugin_loader = PluginLoader.new
     @data_collector = DataCollector.new
 
@@ -16,54 +15,30 @@ class ResumeMakerUserInterface
 
   def start
     while true
-      choice = display_menu
+      choice = @data_collector.display_menu(@chosen_resume_maker.output_format)
 
       case Integer(choice)
       when 1 then get_data
       when 2 then choose_format
       when 3 then save_file
       when 4 then return
-      else puts "\nInvalid option"
+      else @data_collector.show_message("Invalid Option")
       end
     end
   end
 
-  def display_menu
-    system 'clear'
-    puts "\nChoose an option"
-    print "
-        1. Enter data
-        2. Choose format
-        3. Export
-        4. Quit
-
-        Currently chosen format : #{@chosen_resume_maker.output_format}
-
-        Your option : "
-    gets
-  end
-
   def get_data
-    system 'clear'
-    record = @data_collector.collect_data(%w(Name Age Place))
-    @user_data.name, @user_data.age, @user_data.place = record.values
+    @user_data = @data_collector.collect_data(%w(Name Age Place))
   end
 
   def choose_format
-    system 'clear'
-    @resume_makers.each_with_index do |resume_maker, index|
-      puts "\n\t#{index + 1}. #{resume_maker.output_format}"
-    end
-    print "\n\n\tYour choice : "
-    choice = Integer(gets)
+    choice = @data_collector.choose_format(@resume_makers)
 
-    @chosen_resume_maker = @resume_makers[choice - 1]
+    @chosen_resume_maker = @resume_makers[choice]
   end
 
   def save_file
-    system 'clear'
-    print 'file name : '
-    file_name = gets.chomp
+    file_name = @data_collector.get_save_file_name
 
     @chosen_resume_maker.export(@user_data, file_name)
   end

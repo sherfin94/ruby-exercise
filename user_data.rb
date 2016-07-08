@@ -1,10 +1,10 @@
 class UserData
   attr_accessor :name, :age, :place
 
-  def initialize(name: 'Unspecified', age: 'Unspecified', place: 'Unspecified')
-    @name = name
-    @age = age
-    @place = place
+  def initialize(details)
+    @name = details['name']
+    @age = details['age']
+    @place = details['place']
   end
 
   def to_hash
