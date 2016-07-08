@@ -20,7 +20,7 @@ class PluginLoader
     resume_makers
   end
 
-  def validate_plugin(aClass)
-    aClass < ResumeMakerTemplate && aClass.respond_to?(:export)
+  def validate_plugin(a_class)
+    a_class < ResumeMakerTemplate && a_class.respond_to?(:export)
   end
 end
