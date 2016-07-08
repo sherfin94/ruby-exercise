@@ -22,7 +22,7 @@ class ResumeMakerUserInterface
       when 2 then choose_format
       when 3 then save_file
       when 4 then return
-      else @data_collector.show_message("Invalid Option")
+      else @data_collector.show_message('Invalid Option')
       end
     end
   end
