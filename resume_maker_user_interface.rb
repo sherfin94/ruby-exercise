@@ -1,12 +1,15 @@
-require_relative 'format_plugins/resume_maker'
+require_relative 'format_plugins/resume_maker_template'
+require_relative 'user_data'
+require_relative 'plugin_loader'
 
-class ResumeMakerInterface
+class ResumeMakerUserInterface
   def initialize
-    @resume_makers = [ResumeMaker]
-    @user_data = {}
-    @chosen_resume_maker = @resume_makers[0]
+    @resume_makers = []
+    @user_data = UserData.new
+    @plugin_loader = PluginLoader.new
 
     load_format_plugins
+    @chosen_resume_maker = @resume_makers[0]
   end
 
   def start
@@ -20,7 +23,6 @@ class ResumeMakerInterface
       when 4 then return
       else puts "\nInvalid option"
       end
-
     end
   end
 
@@ -43,13 +45,13 @@ class ResumeMakerInterface
     system 'clear'
 
     print ' Name : '
-    @user_data['name'] = gets
+    @user_data.name = gets
 
     print ' Age : '
-    @user_data['age'] = Integer(gets)
+    @user_data.age = gets
 
     print ' Place : '
-    @user_data['place'] = gets
+    @user_data.place = gets
   end
 
   def choose_format
@@ -72,15 +74,6 @@ class ResumeMakerInterface
   end
 
   def load_format_plugins
-    existing_classes = ObjectSpace.each_object(Class).to_a
-    files_in_plugins_folder = `ls format_plugins`.scan(/^.*\.rb$/)
-    files_in_plugins_folder.each do |file_name|
-      require_relative "format_plugins/#{file_name}"
-    end
-
-    new_classes = ObjectSpace.each_object(Class).to_a - existing_classes
-    new_classes.each do |loaded_class|
-      @resume_makers << loaded_class if loaded_class < ResumeMaker
-    end
+    @resume_makers += @plugin_loader.load_plugins
   end
 end

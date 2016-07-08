@@ -1,4 +1,4 @@
-require_relative 'resume_maker_interface'
+require_relative 'resume_maker_user_interface'
 
-interface = ResumeMakerInterface.new
-interface.start
+ui = ResumeMakerUserInterface.new
+ui.start

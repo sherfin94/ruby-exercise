@@ -1,16 +1,22 @@
-require_relative 'resume_maker'
+require_relative 'resume_maker_template'
 require 'CSV'
 
-class CSVResumeMaker < ResumeMaker
+class CSVResumeMaker < ResumeMakerTemplate
   @output_format = 'CSV'
+  @file_extension = 'csv'
 
   class << self
-    attr_reader :output_format
+    attr_reader :output_format, :file_extension
   end
 
   def self.export(user_details, file_name)
-    CSV.open(file_name, 'w') do |csv|
-      csv << [user_details['name'], user_details['age'], user_details['place']]
+    user_details_as_hash = user_details.to_hash
+    CSV.open("#{file_name}.#{@file_extension}", 'w') do |csv|
+      csv << [
+        user_details_as_hash['name'],
+        user_details_as_hash['age'],
+        user_details_as_hash['place']
+      ]
     end
   end
 end

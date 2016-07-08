@@ -1,19 +1,22 @@
-require_relative 'resume_maker'
+require_relative 'resume_maker_template'
 require 'Prawn'
 
-class PDFResumeMaker < ResumeMaker
+class PDFResumeMaker < ResumeMakerTemplate
   @output_format = 'PDF'
+  @file_extension = 'pdf'
 
   class << self
-    attr_reader :output_format
+    attr_reader :output_format, :file_extension
   end
 
   def self.export(user_details, file_name)
+    user_details_as_hash = user_details.to_hash
     pdf = Prawn::Document.new
-    pdf.text user_details['name'], font_size: 72, justification: :center
-    pdf.text user_details['age'].to_s, font_size: 72, justification: :center
-    pdf.text user_details['place'], font_size: 72, justification: :center
 
-    pdf.render_file file_name
+    user_details_as_hash.each do |_key, value|
+      pdf.text value, font_size: 72, justification: :center
+    end
+
+    pdf.render_file "#{file_name}.#{@file_extension}"
   end
 end
